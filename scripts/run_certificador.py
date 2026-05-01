@@ -1,6 +1,6 @@
 """
-Script de prueba manual: genera un certificado individual vía línea de comandos.
-Uso: python scripts/run_certificador.py "Nombre del Alumno" "real|pase de fase"
+Script de prueba manual: genera un certificado individual via linea de comandos.
+Uso: python scripts/run_certificador.py "Nombre del Alumno" "real|pase de fase|elite"
 """
 
 import asyncio
@@ -15,9 +15,9 @@ from app.certificador import Certificador
 
 async def main():
     if len(sys.argv) < 3:
-        print("\n❌ Faltan parámetros.")
-        print("Uso: python scripts/run_certificador.py \"Nombre del Alumno\" \"real|pase de fase\"")
-        print("Ejemplo: python scripts/run_certificador.py \"Juan Perez\" \"real\"")
+        print("\nFaltan parametros.")
+        print('Uso: python scripts/run_certificador.py "Nombre del Alumno" "real|pase de fase|elite"')
+        print('Ejemplo: python scripts/run_certificador.py "Juan Perez" "elite"')
         return
 
     nombre = sys.argv[1]
@@ -28,12 +28,12 @@ async def main():
         resultado = await cert.crear_certificado(nombre, tipo)
 
         if resultado["status"] == "success":
-            print(f"\n✅ ¡ÉXITO!")
+            print("\nEXITO")
             print(f"Archivo: {resultado['output_path']}")
             print(f"Tiempo: {resultado['elapsed_s']}s")
         else:
             error = resultado.get("error", {})
-            print(f"\n❌ ERROR: {error.get('message', 'Error desconocido')}")
+            print(f"\nERROR: {error.get('message', 'Error desconocido')}")
     finally:
         await cert.close()
 

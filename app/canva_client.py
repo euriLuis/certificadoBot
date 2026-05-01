@@ -105,21 +105,26 @@ class CanvaClient:
                     continue
                 raise CanvaTransientError(f"Error de red tras reintentos: {str(e)}")
 
+    async def get_brand_template(self, brand_template_id: str) -> Dict[str, Any]:
+        url = f"https://api.canva.com/rest/v1/brand-templates/{brand_template_id}"
+        return await self._request("GET", url, headers=self._headers_auth())
+
+    async def get_brand_template_dataset(self, brand_template_id: str) -> Dict[str, Any]:
+        url = f"https://api.canva.com/rest/v1/brand-templates/{brand_template_id}/dataset"
+        return await self._request("GET", url, headers=self._headers_auth())
+
     async def create_autofill_job(
         self,
         brand_template_id: str,
-        cert_tipo: str,
-        nombre: str,
-        fecha: str
+        data: Dict[str, Any],
+        title: str | None = None,
     ) -> Dict[str, Any]:
         payload = {
             "brand_template_id": brand_template_id,
-            "title": f"Certificado {cert_tipo} {nombre}",
-            "data": {
-                "nombre": {"type": "text", "text": nombre},
-                "fecha": {"type": "text", "text": fecha},
-            },
+            "data": data,
         }
+        if title:
+            payload["title"] = title
         return await self._request("POST", CANVA_AUTOFILL_URL, headers=self._headers_json(), json=payload)
 
     async def get_autofill_job(self, job_id: str) -> Dict[str, Any]:
